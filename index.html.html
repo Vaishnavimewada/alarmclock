@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital clock and alarm </title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            
+        
+        }
+        body{
+            background-image: url("alarm3.jpg") ;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container{
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #clock{
+            color: rgb(8, 8, 8);
+            /* background-color: white; */
+            font-weight: bold;
+            font-size: 100px;
+            padding: 50px;
+            margin-left: 200px;
+
+        }
+        
+
+         /* #clock{
+            font-family: "orbitron",sans-serif;
+            font-size: 15vw;
+            background-image: linear-gradient(180deg,
+            rgb(243 207 30) 0%,
+            rgb(183 172 39) 50%,
+            rgb(120 118 40) 100%,
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -moz-text-fill-color: transparent;
+        }  */
+
+        input{
+            border: 2px solid #3c3838;
+            border-radius: 4px;
+            background-color: transparent;
+            display: block;
+            font-size: 14px;
+            padding: 10px 15px;
+            margin-top: -30px;
+            margin-left: 200px;
+        }
+
+        .controls{
+            margin-top: 16px;
+        }
+
+        .button{
+            font-weight: bold;
+            border-radius: 20px;
+            border: 2px solid black;
+            color: rgb(10, 9, 9);
+            background-color: transparent;
+            height: 40px;
+            width: 170px;
+            padding: 8px 20px;
+            margin-left: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-left: 200px;
+        }
+
+        .set-alarm{
+            /* background-color: green; */
+            
+        }
+        .clear-alarm{
+            /* background-color: red; */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock">
+        <div id="clock">
+            <!-- <span id="hours">00</span>
+        <span>:</span>
+        <span id="minutes">00</span>
+        <span>:</span>
+        <span id="seconds">00</span>
+        
+        <span id="session">AM</span> -->
+
+        </div>
+        </div>
+        <input type="datetime-local"name="alarmType" onchange="setAlarmTime(this.value)"/>
+        <div class="controls">
+            <button class="button set-alarm" onclick="setAlarm()">set alarm</button>
+            <button class="button clear-alarm" onclick="clearAlarm()">clear alarm</button>
+        </div>
+    </div>
+
+
+    <script>
+        //step 1- define some basic variable
+
+        let display=document.getElementById('clock');
+        const audio=new Audio("1.mp3");
+        audio.loop=true;
+        let alarmTime=null;
+        let alarmTimeout=null;
+
+
+        //step 2-display the clock
+        function updateTime(){
+        const date= new Date();
+        const hour=formatTime(date.getHours());
+        const min=formatTime(date.getMinutes());
+        const sec=formatTime(date.getSeconds());
+        display.innerText=hour+":"+min+":"+sec;
+        }
+
+       function formatTime(time){
+            if(time<10)
+            return "0"+time;
+            return time;
+        }
+
+        setInterval(updateTime,1000);
+
+        //step 3-set the Alarm
+        function setAlarmTime(value){
+            alarmTime=value;
+        }
+
+        function setAlarm(){
+            if(alarmTime){
+                const current=new Date();
+                const timeToAlarm=new Date(alarmTime);
+            
+                if(timeToAlarm>current){
+                    const timeout=timeToAlarm.getTime()-current.getTime();
+                    alarmTimeout=setTimeout(function(){
+                        audio.play();
+                    },timeout);
+                    alert("Alarm Set!");
+                }
+            }
+        }
+
+        //step 4-clear the alarm
+
+        function clearAlarm(){
+            audio.pause();
+            if(alarmTimeout){
+                clearTimeout(alarmTimeout)
+                alert("Alarm cleared!")
+            }
+        }
+
+
+    </script>
+    
+</body>
+</html>
